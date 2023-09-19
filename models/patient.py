@@ -50,11 +50,11 @@ class Patient(models.Model):
             }
             rec.env['patient.states.logs'].create(vals)
 
-    @api.constrains('age')
-    def check_age(self):
-        for rec in self:
-            if rec.age < 0 :
-                raise ValidationError('Age can\'t be less than zero')
+    # @api.constrains('age')
+    # def check_age(self):
+    #     for rec in self:
+    #         if rec.age < 0 :
+    #             raise ValidationError('Age can\'t be less than zero')
 
     @api.depends('birth_day')
     def _compute_age(self):
@@ -71,8 +71,9 @@ class Patient(models.Model):
     def _vaild_name(self) :
         for rec in self :
             regex =  r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-
-            if not re.match(regex, rec.email) :
+            if not rec.email :
+                raise Exception("you must provide email address")
+            elif not re.match(regex, rec.email) :
                 raise ValidationError("email is not vaild")
 
     _sql_constraints = [
