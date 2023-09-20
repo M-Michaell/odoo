@@ -17,7 +17,6 @@ class Hospital_customers(models.Model):
     @api.constrains('related_patient_id')
     def valid_related_patient(self):
         for rec in self:
-            # Search for records with the same related_patient_id but exclude the current record
             patient_id = rec.search([('related_patient_id', '=', rec.related_patient_id.id), ('id', '!=', rec.id)])
             if patient_id:
                 raise ValidationError('This patient is already related to a different customer.')
